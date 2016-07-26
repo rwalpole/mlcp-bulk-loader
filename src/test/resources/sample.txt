@@ -1,0 +1,2 @@
+C:\Users\walpolrx\github\mlcp-bulk-loader\src\test\resources\sample\1551_16a
+C:\Users\walpolrx\github\mlcp-bulk-loader\src\test\resources\sample\1708_14a
