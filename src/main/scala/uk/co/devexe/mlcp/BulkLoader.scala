@@ -18,7 +18,7 @@ import scala.sys.process._
 object BulkLoader {
 
     def main(args: Array[String]):Unit = {
-        if(args.length != 5) {
+        if(args.length != 6) {
             return usage()
         }
         val inputFilePath = args(0)
