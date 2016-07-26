@@ -7,7 +7,6 @@ import com.typesafe.config.ConfigFactory
   */
 object BulkLoaderConfig {
     private val config =  ConfigFactory.load()
-    val dataDir = config.getString("mlcp.data-dir")
     val baseDataUri = config.getString("mlcp.base-data-uri")
     val baseCollectionUri = config.getString("mlcp.base-collection-uri")
     val defaultCollectionUri = baseCollectionUri + config.getString("mlcp.default-collection-name")

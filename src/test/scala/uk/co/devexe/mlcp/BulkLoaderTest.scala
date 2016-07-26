@@ -8,16 +8,21 @@ import org.junit._
 @Test
 class BulkLoaderTest {
 
+    @Ignore
     @Test
-    def testProcess() = {
-        val file = new File("src/test/resources/test.txt")
-        val processor = new BulkLoader(file)
-        val result = processor.process("localhost","8008","admin","admin","versioned-sis")
-
+    def testProcessFile() {
+        val file = new File("src/test/resources/sample.txt")
+        val processor = new BulkLoader(new Server("localhost","8008"),new Account("admin","admin"),"versioned-acts")
+        val result = processor.processFile(file)
     }
 
-//    @Test
-//    def testKO() = assertTrue(false)
+    @Ignore
+    @Test
+    def testProcessDirectory() {
+        val directory = new File("src/test/resources/sample")
+        val processor = new BulkLoader(new Server("localhost","8008"),new Account("admin","admin"),"versioned-acts")
+        val result = processor.processDirectory(directory)
+    }
 
 }
 
