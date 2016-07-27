@@ -1,4 +1,6 @@
 #MLCP Bulk Loader
+[![Build Status](https://travis-ci.org/rwalpole/mlcp-bulk-loader.svg?branch=master)](https://travis-ci.org/rwalpole/mlcp-bulk-loader)
+
 This Bulk Loader extends MarkLogic Content Pump ([MLCP](https://developer.marklogic.com/products/mlcpMLCP)) to bulk load multiple directories of data into a running instance of [MarkLogic NoSQL Database](http://www.marklogic.com/). It takes either a text input file which contains a list of directory paths or a directory name from which it then attempts to load the sub-directories contained within. Which method to use depends on the location of your data and whether you want to be highly selective or not.
 
 You will need [Apache Maven](https://maven.apache.org/) and the [Java SE 8 JDK](http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html) to build this tool. 
