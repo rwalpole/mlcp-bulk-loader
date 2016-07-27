@@ -25,7 +25,7 @@ object BulkLoader {
         val server = new Server(args(1),args(2))
         val account = new Account(args(3),args(4))
         val dataType = args(5)
-        val loader = new BulkLoader(server,account,dataType)
+        val loader = new BulkLoader(server,account,dataType, new Executor())
         loader.run(new File(inputFilePath))
     }
 
@@ -35,7 +35,7 @@ object BulkLoader {
     }
 }
 
-class BulkLoader(server: Server, account: Account, dataType: String) {
+class BulkLoader(server: Server, account: Account, dataType: String, executor: Executable) {
 
     val logger = LoggerFactory.getLogger(classOf[BulkLoader])
 
@@ -45,11 +45,13 @@ class BulkLoader(server: Server, account: Account, dataType: String) {
 
     def run(file: File) {
         if(file.exists()){
-            if(file.isFile) {
-                processFile(file)
-            } else {
-                processDirectory(file)
-            }
+            val result =
+                if(file.isFile) {
+                    processFile(file)
+                } else {
+                    processDirectory(file)
+                }
+            logger.info("Loaded data from " + result + " directories")
         } else {
             logger.error("File or folder does not exist: " + file.getPath)
         }
@@ -65,10 +67,12 @@ class BulkLoader(server: Server, account: Account, dataType: String) {
       *
       * @param directory
       */
-    def processDirectory(directory: File) {
-        directory.listFiles.filter(_.isDirectory) map { subDir =>
+    def processDirectory(directory: File): Int = {
+        val subDirs = directory.listFiles.filter(_.isDirectory)
+        subDirs map { subDir =>
             runMlcp(directory.getAbsolutePath + "\\" + subDir.getName)
         }
+        subDirs.length
     }
 
     /**
@@ -76,15 +80,16 @@ class BulkLoader(server: Server, account: Account, dataType: String) {
       *
       * @param directoryListFile
       */
-    def processFile(directoryListFile: File) {
+    def processFile(directoryListFile: File): Int = {
         val directories = readFile(directoryListFile)
         directories map { directory =>
             runMlcp(directory)
         }
+        directories.length
     }
 
     def runMlcp(inputDirectory: String): Unit = {
-        import scala.language.postfixOps
+
         val command = Seq(
             "mlcp","import",
             "-host",server.hostname,
@@ -98,7 +103,7 @@ class BulkLoader(server: Server, account: Account, dataType: String) {
         )
         val winCommand = panderToWindows(command)
         logger.info("Executing command: " + winCommand.mkString(" "))
-        winCommand !
+        executor.execute(winCommand)
     }
 
     private def getUriReplaceString(directoryName: String): String = {
@@ -122,5 +127,16 @@ class BulkLoader(server: Server, account: Account, dataType: String) {
 }
 
 class Account(val username: String, val password: String)
+
 class Server(val hostname: String, val port: String)
+
+trait Executable {
+    def execute(command: Seq[String])
+}
+
+class Executor extends Executable {
+    import scala.language.postfixOps
+    override def execute(command: Seq[String]) = command !
+}
+
 
