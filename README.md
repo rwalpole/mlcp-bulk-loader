@@ -17,3 +17,4 @@ The required command line parameters are as follows:
 - **user name** - must be a user with write access to the MarkLogic database
 - **password** - password for the user above
 - **data type** - this data type is used to allocate a collection name to the data being loaded 
+- **permissions** - a comma separated list of (role,capability) pairs to apply to loaded documents

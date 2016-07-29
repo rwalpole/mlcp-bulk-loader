@@ -18,24 +18,25 @@ import scala.sys.process._
 object BulkLoader {
 
     def main(args: Array[String]):Unit = {
-        if(args.length != 6) {
+        if(args.length != 7) {
             return usage()
         }
         val inputFilePath = args(0)
         val server = new Server(args(1),args(2))
         val account = new Account(args(3),args(4))
         val dataType = args(5)
-        val loader = new BulkLoader(server,account,dataType, new Executor())
+        val permissions = args(6)
+        val loader = new BulkLoader(server,account,dataType, permissions, new Executor())
         loader.run(new File(inputFilePath))
     }
 
     def usage() {
         println("Usage:")
-        println("\tjava -jar mlcp-bulk-loader-1.0.jar <input-file-name-or-directory-path> <hostname> <port> <username> <password> <datatype>")
+        println("\tjava -jar mlcp-bulk-loader-1.0.jar <input-file-name-or-directory-path> <hostname> <port> <username> <password> <datatype> '<permissions>'")
     }
 }
 
-class BulkLoader(server: Server, account: Account, dataType: String, executor: Executable) {
+class BulkLoader(server: Server, account: Account, dataType: String, permissions: String, executor: Executable) {
 
     val logger = LoggerFactory.getLogger(classOf[BulkLoader])
 
@@ -99,7 +100,8 @@ class BulkLoader(server: Server, account: Account, dataType: String, executor: E
             "-database","rosetta-content",
             "-input_file_path",inputDirectory,
             "-output_uri_replace",getUriReplaceString(inputDirectory),
-            "-output_collections",getOutputCollections(dataType)
+            "-output_collections",getOutputCollections(dataType),
+            "-output_permissions","\"" + permissions + "\""
         )
         val winCommand = panderToWindows(command)
         logger.info("Executing command: " + winCommand.mkString(" "))
