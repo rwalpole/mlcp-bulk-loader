@@ -12,8 +12,6 @@ import scala.sys.process._
   * a running instance of MarkLogic NoSQL Database. It takes either a text input file which contains a list of
   * directory paths or a directory name from which it then attempts to load the sub-directories contained within.
   * Which method to use depends on the location of your data and whether you want to be highly selective or not.
-  *
-  * @param fileToProcess
   */
 object BulkLoader {
 
@@ -41,8 +39,6 @@ class BulkLoader(server: Server, account: Account, dataType: String, permissions
     val logger = LoggerFactory.getLogger(classOf[BulkLoader])
 
     val os = sys.props("os.name").toLowerCase
-
-    val rosettaCollectionUri = "http://lexisnexis.co.uk/collection/rosetta-xml"
 
     def run(file: File) {
         if(file.exists()){
